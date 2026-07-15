@@ -19,9 +19,10 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://my-portfolio-lyart-six-80.vercel.app",
+  
+  "https://portfolio-pi-roan-11.vercel.app",  // ✅ YE URL DAALO
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
-  process.env.RENDER_URL || "https://portfolio-e4qr.onrender.com/",
+  "https://portfolio-e4qr.onrender.com",
 ].filter(Boolean);
 
 // ==============================
