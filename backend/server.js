@@ -21,7 +21,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://my-portfolio-lyart-six-80.vercel.app",
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
-  process.env.RENDER_URL || "https://your-backend.onrender.com",
+  process.env.RENDER_URL || "https://portfolio-e4qr.onrender.com/",
 ].filter(Boolean);
 
 // ==============================
