@@ -13,20 +13,30 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ==============================
+// ✅ Trust Proxy (Render ke liye - MUST HAVE)
+// ==============================
+
+if (process.env.NODE_ENV === "production") {
+  app.set('trust proxy', 1);
+  console.log("✅ Trust proxy enabled for Render");
+}
+
+// ==============================
 // Allowed Origins
 // ==============================
 
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  
-  "https://portfolio-pi-roan-11.vercel.app",  // ✅ YE URL DAALO
+  "https://portfolio-pi-roan-11.vercel.app",
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   "https://portfolio-e4qr.onrender.com",
 ].filter(Boolean);
 
+console.log("✅ Allowed Origins:", allowedOrigins);
+
 // ==============================
-// CORS - ✅ FIXED (No app.options)
+// CORS
 // ==============================
 
 app.use(
@@ -41,7 +51,6 @@ app.use(
       }
 
       console.log("❌ Blocked Origin:", origin);
-
       return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -49,8 +58,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// ❌ DELETE THIS LINE - app.options("/*", cors()); is NOT needed
 
 // ==============================
 // Middleware
@@ -100,6 +107,7 @@ app.get("/test-smtp", async (req, res) => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      family: 4, // ✅ IPv4 force (Render ke liye)
       connectionTimeout: 30000,
       greetingTimeout: 30000,
       socketTimeout: 30000,
@@ -128,10 +136,7 @@ app.use("/api/contact", contactRoutes);
 // ==============================
 
 if (process.env.NODE_ENV === "production") {
-  // Frontend build folder serve karo
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  // SPA routing - saare non-API requests frontend pe bhejo
   app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
@@ -165,5 +170,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Server Running on Port ${PORT}`);
   console.log(`📧 Email: ${process.env.EMAIL_USER}`);
   console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🔒 Trust Proxy: ${process.env.NODE_ENV === "production" ? "ON" : "OFF"}`);
   console.log("═══════════════════════════════════");
 });
